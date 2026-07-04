@@ -5,6 +5,7 @@ import com.github.tartaricacid.touhoulittlemaid.datagen.tag.TagItem;
 import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.github.tartaricacid.touhoulittlemaid.init.InitEntities;
 import com.github.tartaricacid.touhoulittlemaid.init.InitItems;
+import com.github.tartaricacid.touhoulittlemaid.util.IdentifierUtil;
 import com.github.tartaricacid.touhoulittlemaid.util.migrate.EntityTypeUtil;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -412,43 +413,47 @@ public class RecipeGenerator extends RecipeProvider {
                 .requires(TagItem.MAID_BED)
                 .requires(Tags.Items.DYES_PINK)
                 .unlockedBy("has_maid_bed", has(TagItem.MAID_BED))
-                .save(recipeOutput, "pink_maid_bed_from_dye");
+                .save(recipeOutput, id("pink_maid_bed_from_dye"));
 
         this.shapeless(RecipeCategory.MISC, InitItems.WHITE_MAID_BED)
                 .requires(TagItem.MAID_BED)
                 .requires(Tags.Items.DYES_WHITE)
                 .unlockedBy("has_maid_bed", has(TagItem.MAID_BED))
-                .save(recipeOutput, "white_maid_bed_from_dye");
+                .save(recipeOutput, id("white_maid_bed_from_dye"));
 
         this.shapeless(RecipeCategory.MISC, InitItems.BLACK_MAID_BED)
                 .requires(TagItem.MAID_BED)
                 .requires(Tags.Items.DYES_BLACK)
                 .unlockedBy("has_maid_bed", has(TagItem.MAID_BED))
-                .save(recipeOutput, "black_maid_bed_from_dye");
+                .save(recipeOutput, id("black_maid_bed_from_dye"));
 
         this.shapeless(RecipeCategory.MISC, InitItems.YELLOW_MAID_BED)
                 .requires(TagItem.MAID_BED)
                 .requires(Tags.Items.DYES_YELLOW)
                 .unlockedBy("has_maid_bed", has(TagItem.MAID_BED))
-                .save(recipeOutput, "yellow_maid_bed_from_dye");
+                .save(recipeOutput, id("yellow_maid_bed_from_dye"));
 
         this.shapeless(RecipeCategory.MISC, InitItems.BLUE_MAID_BED)
                 .requires(TagItem.MAID_BED)
                 .requires(Tags.Items.DYES_BLUE)
                 .unlockedBy("has_maid_bed", has(TagItem.MAID_BED))
-                .save(recipeOutput, "blue_maid_bed_from_dye");
+                .save(recipeOutput, id("blue_maid_bed_from_dye"));
 
         this.shapeless(RecipeCategory.MISC, InitItems.GREEN_MAID_BED)
                 .requires(TagItem.MAID_BED)
                 .requires(Tags.Items.DYES_GREEN)
                 .unlockedBy("has_maid_bed", has(TagItem.MAID_BED))
-                .save(recipeOutput, "green_maid_bed_from_dye");
+                .save(recipeOutput, id("green_maid_bed_from_dye"));
 
         this.shapeless(RecipeCategory.MISC, InitItems.PURPLE_MAID_BED)
                 .requires(TagItem.MAID_BED)
                 .requires(Tags.Items.DYES_PURPLE)
                 .unlockedBy("has_maid_bed", has(TagItem.MAID_BED))
-                .save(recipeOutput, "purple_maid_bed_from_dye");
+                .save(recipeOutput, id("purple_maid_bed_from_dye"));
+    }
+
+    private static String id(String path) {
+        return IdentifierUtil.modLoc(path).toString();
     }
 
     public static class Runner extends RecipeProvider.Runner {
