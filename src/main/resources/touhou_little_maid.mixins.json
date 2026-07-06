@@ -27,10 +27,11 @@
   ],
   "client": [
     "client.ClientPacketListenerMixin",
-    "client.DrawableGizmoPrimitives$GroupMixin",
     "client.DrawableGizmoPrimitives$TextMixin",
     "client.DrawableGizmoPrimitivesMixin",
     "client.FishingRodCastMixin",
+    "client.GizmoFeatureRendererMixin",
+    "client.GizmoFeatureRendererMixin$GlyphVisitorMixin",
     "client.InventoryScreenMixin",
     "client.LanguageMixin",
     "client.LevelRendererMixin",
