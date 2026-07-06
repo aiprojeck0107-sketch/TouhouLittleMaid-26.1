@@ -72,7 +72,8 @@ public class MaidFarmPlantTask extends Behavior<EntityMaid> {
             if (!slots.isEmpty()) {
                 for (int slot : slots) {
                     try (Transaction tx = Transaction.openRoot()) {
-                        @NotNull ItemResource res = availableInv.getResource(slot);
+                        ItemResource res = availableInv.getResource(slot);
+                        if (res.isEmpty()) continue;
                         int seedCount = availableInv.extract(slot, res, res.getMaxStackSize(), tx);
                         if (seedCount == 0) continue;
                         ItemStack seed = res.toStack(seedCount);
