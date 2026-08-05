@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "com.github.tartaricacid.touhoulittlemaid.mixin",
-  "compatibilityLevel": "JAVA_25",
+  "compatibilityLevel": "JAVA_17",
   "mixins": [
     "ArrowMixin",
     "BlockBurningCache",
@@ -27,7 +27,6 @@
   ],
   "client": [
     "client.ClientPacketListenerMixin",
-    // "client.HumanoidModelMixin",
     "client.FishingRodCastMixin",
     "client.LanguageMixin",
     "client.LivingEntityRendererMixin",

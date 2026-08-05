@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "touhou_little_maid",
+  "version": "2.0.0-fabric",
+  "name": "Touhou Little Maid",
+  "description": "A new version of the minecraft mod inspired by the LittleMaidReengaged mod.",
+  "authors": ["TartaricAcid","Snownee","Succinum","Pajinyi","Zhi_Ban","CrystalizedSun","Foky","ZeniCrow","Paulzzh","Yuriscat","Lappland162"],
+  "contact": {
+    "homepage": "https://discord.gg/re4xQtb",
+    "issues": "https://github.com/TartaricAcid/TouhouLittleMaid/issues"
+  },
+  "license": "MIT",
+  "entrypoints": {
+    "main": ["com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid"],
+    "client": ["com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaidClient"]
+  },
+  "mixins": [
+    "touhou_little_maid.mixins.json"
+  ],
+  "accessWidener": "touhou_little_maid.accesswidener",
+  "depends": {
+    "fabricloader": ">=0.14.0",
+    "minecraft": "26.1.2"
+  }
+}

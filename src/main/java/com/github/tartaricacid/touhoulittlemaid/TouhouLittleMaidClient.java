@@ -1,36 +1,17 @@
 package com.github.tartaricacid.touhoulittlemaid;
 
-import com.github.tartaricacid.touhoulittlemaid.client.entity.GeckoMaidEntity;
-import com.github.tartaricacid.touhoulittlemaid.compat.cloth.MenuIntegration;
-import com.github.tartaricacid.touhoulittlemaid.init.InitDataAttachment;
-import com.github.tartaricacid.touhoulittlemaid.init.registry.CompatRegistry;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.loading.FMLLoader;
-import net.neoforged.fml.loading.moddiscovery.ModFileInfo;
-import net.neoforged.neoforge.client.gui.ConfigurationScreen;
-import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import net.fabricmc.api.ClientModInitializer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-@Mod(value = TouhouLittleMaid.MOD_ID, dist = Dist.CLIENT)
-public class TouhouLittleMaidClient {
-    public TouhouLittleMaidClient(IEventBus modEventBus, ModContainer modContainer) {
-        this.registerClientOnly();
-        this.registerConfigMenu(modContainer);
-    }
+public class TouhouLittleMaidClient implements ClientModInitializer {
+    public static final Logger LOGGER = LogManager.getLogger(TouhouLittleMaid.MOD_ID + "-client");
 
-    private void registerClientOnly() {
-        // 这个仅用于客户端，所以不需要在服务端注册
-        InitDataAttachment.ATTACHMENT_TYPES.register("gecko_maid", () -> GeckoMaidEntity.TYPE);
-    }
+    @Override
+    public void onInitializeClient() {
+        LOGGER.info("Initializing TouhouLittleMaidClient on Fabric");
 
-    private void registerConfigMenu(ModContainer modContainer) {
-        ModFileInfo clothConfigInfo = FMLLoader.getCurrent().getLoadingModList().getModFileById(CompatRegistry.CLOTH_CONFIG);
-        if (clothConfigInfo != null) {
-            MenuIntegration.registerModsPage(modContainer);
-        } else {
-            modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
-        }
+        // TODO: move client-only registration here (renderers, keybindings, client data, config menu integration)
+        // Original code used NeoForge ModContainer and cloth config detection. On Fabric we should use ModMenu/Cloth-Config-Fabric integration
     }
 }

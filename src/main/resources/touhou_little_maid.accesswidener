@@ -1,0 +1,14 @@
+# Access widener draft converted from accesstransformer.cfg
+# Format: accessWidener v3
+# NOTE: This is a generated draft. Please review and correct method/field descriptors as needed.
+accessWidener v1 named
+
+# Example public fields/classes (converted loosely from accesstransformer.cfg) -- review carefully
+public class net.minecraft.client.Minecraft
+public field net.minecraft.client.Minecraft fps Lnet/minecraft/client/Minecraft;
+
+public class net.minecraft.world.entity.LivingEntity
+public method net.minecraft.world.entity.LivingEntity eat (Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/world/item/ItemStack;
+public method net.minecraft.world.entity.LivingEntity breakItem (Lnet/minecraft/world/item/ItemStack;)V
+
+# TODO: Convert remaining entries from accesstransformer.cfg to access widener format with exact descriptors
