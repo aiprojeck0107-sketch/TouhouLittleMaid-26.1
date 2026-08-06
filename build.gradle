@@ -64,25 +64,32 @@ tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
 
-// ShadowJar config using John Rengelman plugin API
+// ShadowJar configuration: configure existing shadowJar task if it exists, otherwise register it.
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
-tasks.register('shadowJar', ShadowJar) {
-    archiveClassifier.set('')
-    configurations = [project.configurations.runtimeClasspath]
-    relocate 'io.github.jaredmdobson.concentus', 'com.github.tartaricacid.touhoulittlemaid.libs.concentus'
-    relocate 'org.gagravarr', 'com.github.tartaricacid.touhoulittlemaid.libs.gagravarr'
-    relocate 'javazoom.jl', 'com.github.tartaricacid.touhoulittlemaid.libs.javazoom.jl'
-    relocate 'javazoom.spi', 'com.github.tartaricacid.touhoulittlemaid.libs.javazoom.spi'
-    relocate 'org.tritonus', 'com.github.tartaricacid.touhoulittlemaid.libs.org.tritonus'
-    relocate 'org.yaml.snakeyaml', 'com.github.tartaricacid.touhoulittlemaid.libs.snakeyaml'
-    mergeServiceFiles()
-    minimize()
+// closure to configure a ShadowJar task
+def configureShadow = { ShadowJar s ->
+    s.archiveClassifier.set('')
+    s.configurations = [project.configurations.runtimeClasspath]
+    s.relocate('io.github.jaredmdobson.concentus', 'com.github.tartaricacid.touhoulittlemaid.libs.concentus')
+    s.relocate('org.gagravarr', 'com.github.tartaricacid.touhoulittlemaid.libs.gagravarr')
+    s.relocate('javazoom.jl', 'com.github.tartaricacid.touhoulittlemaid.libs.javazoom.jl')
+    s.relocate('javazoom.spi', 'com.github.tartaricacid.touhoulittlemaid.libs.javazoom.spi')
+    s.relocate('org.tritonus', 'com.github.tartaricacid.touhoulittlemaid.libs.org.tritonus')
+    s.relocate('org.yaml.snakeyaml', 'com.github.tartaricacid.touhoulittlemaid.libs.snakeyaml')
+    s.mergeServiceFiles()
+    s.minimize()
 }
 
-// Make assemble depend on shadowJar (but remapJar will be created by loom)
-tasks.named('assemble') {
-    dependsOn tasks.named('shadowJar')
+if (tasks.findByName('shadowJar')) {
+    tasks.named('shadowJar', ShadowJar).configure(configureShadow)
+} else {
+    tasks.register('shadowJar', ShadowJar, configureShadow)
+}
+
+// Make assemble depend on shadowJar if it exists (use provider to avoid eager resolution)
+if (tasks.findByName('shadowJar')) {
+    tasks.named('assemble').configure { dependsOn tasks.named('shadowJar') }
 }
 
 publishing {
