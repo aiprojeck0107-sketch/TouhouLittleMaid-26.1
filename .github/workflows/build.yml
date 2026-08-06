@@ -33,8 +33,28 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Scan class versions (diagnostic)
-        run: ./gradlew scanClassVersions | tee class_versions.txt
+      - name: Scan class versions (diagnostic) with retry
+        run: |
+          set -e
+          max_attempts=3
+          attempt=1
+          until [ $attempt -gt $max_attempts ]
+          do
+            echo "Scan attempt $attempt/$max_attempts"
+            if ./gradlew scanClassVersions | tee class_versions.txt; then
+              echo "Scan succeeded"
+              break
+            fi
+            echo "Scan failed (attempt $attempt)."
+            attempt=$((attempt+1))
+            sleep_seconds=$((attempt*10))
+            echo "Sleeping $sleep_seconds seconds before retry..."
+            sleep $sleep_seconds
+          done
+          if [ $attempt -gt $max_attempts ]; then
+            echo "All scan attempts failed" >&2
+            exit 1
+          fi
 
       - name: Upload class version scan
         uses: actions/upload-artifact@v4
@@ -42,8 +62,28 @@ jobs:
           name: class-versions
           path: class_versions.txt
 
-      - name: Build
-        run: ./gradlew --no-daemon clean build -x test
+      - name: Build with retry
+        run: |
+          set -e
+          max_attempts=3
+          attempt=1
+          until [ $attempt -gt $max_attempts ]
+          do
+            echo "Build attempt $attempt/$max_attempts"
+            if ./gradlew --no-daemon clean build -x test; then
+              echo "Build succeeded"
+              break
+            fi
+            echo "Build failed (attempt $attempt)."
+            attempt=$((attempt+1))
+            sleep_seconds=$((attempt*15))
+            echo "Sleeping $sleep_seconds seconds before retry..."
+            sleep $sleep_seconds
+          done
+          if [ $attempt -gt $max_attempts ]; then
+            echo "All build attempts failed" >&2
+            exit 1
+          fi
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
