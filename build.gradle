@@ -32,6 +32,18 @@ repositories {
     maven { url = 'https://jitpack.io' }
 }
 
+// Workaround: force a newer ASM version so Loom's Jar merging can parse newer classfile versions.
+// Some dependencies contain classfiles compiled with a newer JDK (major version 69). Forcing
+// org.ow2.asm artifacts to a recent release can allow ASM to support newer class file majors.
+configurations.all {
+    resolutionStrategy {
+        // Force newer ASM artifacts (version may be updated if necessary)
+        force 'org.ow2.asm:asm:10.4',
+              'org.ow2.asm:asm-tree:10.4',
+              'org.ow2.asm:asm-analysis:10.4'
+    }
+}
+
 configurations {
     shaded
 }
