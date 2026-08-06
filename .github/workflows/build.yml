@@ -33,6 +33,15 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Scan class versions (diagnostic)
+        run: ./gradlew scanClassVersions | tee class_versions.txt
+
+      - name: Upload class version scan
+        uses: actions/upload-artifact@v4
+        with:
+          name: class-versions
+          path: class_versions.txt
+
       - name: Build
         run: ./gradlew --no-daemon clean build -x test
 
