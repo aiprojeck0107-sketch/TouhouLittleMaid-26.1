@@ -30,42 +30,45 @@ repositories {
     maven { url = 'https://jitpack.io' }
 }
 
-// Loom configuration
-loom {
-    // Use properties from gradle.properties where possible
-    // mappings and loader versions may need adjustments based on Minecraft version
+configurations {
+    // optional configuration if you want to separate libraries that will be shaded
+    shaded
 }
 
 dependencies {
-    // Minecraft and mappings
+    // Minecraft and mappings (use properties from gradle.properties)
     minecraft "com.mojang:minecraft:${minecraft_version}"
-    // yarn mappings placeholder — the exact mapping version may need update to a valid yarn build
-    mappings "net.fabricmc:yarn:1.0+build.1"
+    mappings "net.fabricmc:yarn:${yarn_mappings}"
 
-    // Fabric loader and api — versions are placeholders and may need updating
-    modImplementation "net.fabricmc:fabric-loader:0.14.19"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:1.76.0+1.26.1"
+    // Fabric loader and api using properties
+    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
 
-    // Keep libraries previously shaded
+    // Keep libraries previously shaded (put into shaded or implementation)
     implementation 'com.squareup:javapoet:1.13.0'
-
-    // Libraries from original project to be kept/relocated as needed
-    mcLib "org.gagravarr:vorbis-java-core:0.8"
-    mcLib "io.github.jaredmdobson:concentus:1.0.2"
-    mcLib "com.googlecode.soundlibs:mp3spi:1.9.5.4"
-    mcLib "org.yaml:snakeyaml:2.4"
+    implementation 'org.gagravarr:vorbis-java-core:0.8'
+    implementation 'io.github.jaredmdobson:concentus:1.0.2'
+    implementation 'com.googlecode.soundlibs:mp3spi:1.9.5.4'
+    implementation 'org.yaml:snakeyaml:2.4'
 
     testImplementation 'junit:junit:4.13.2'
-
-    // NOTE: Third-party mod deps (JEI, Cloth-config, Jade, Curios, GeckoLib, Sodium/Iris, Aquaculture)
-    // need to be replaced with Fabric-compatible artifacts. These are TODOs.
 }
 
-tasks.compileJava {
+// Loom configuration (small defaults, can be extended)
+loom {
+    // If you use an access widener, point here (gradle will include it)
+    accessWidenerPath = file("src/main/resources/${mod_id}.accesswidener")
+    // You can tune runs/data generation here later
+}
+
+tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
+    // Keep target compatibility in sync with toolchain if necessary
 }
 
+// ShadowJar config
 shadowJar {
+    archiveClassifier.set('')
     dependencies {
         exclude(dependency('junit:junit'))
     }
@@ -79,7 +82,7 @@ shadowJar {
     minimize()
 }
 
-assemble {
+tasks.named('assemble') {
     dependsOn shadowJar
 }
 
