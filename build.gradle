@@ -37,10 +37,10 @@ repositories {
 // org.ow2.asm artifacts to a recent release can allow ASM to support newer class file majors.
 configurations.all {
     resolutionStrategy {
-        // Force newer ASM artifacts (version may be updated if necessary)
-        force 'org.ow2.asm:asm:10.4',
-              'org.ow2.asm:asm-tree:10.4',
-              'org.ow2.asm:asm-analysis:10.4'
+        // Force newer ASM artifacts (increase if a newer ASM is needed)
+        force 'org.ow2.asm:asm:11.0',
+              'org.ow2.asm:asm-tree:11.0',
+              'org.ow2.asm:asm-analysis:11.0'
     }
 }
 
@@ -118,6 +118,51 @@ publishing {
     }
 }
 
+// Rewrite configuration
 rewrite {
     activeRecipe("com.github.tartaricacid.Upgrade")
+}
+
+// Diagnostic task: scan runtime jars and print highest class major version per JAR.
+// This helps identify which dependency contains class files with major version > 65 (Java 21).
+tasks.register('scanClassVersions') {
+    group = 'diagnostic'
+    description = 'Scan runtime jars and print the highest class file major version found in each jar.'
+
+    doLast {
+        def threshold = 65 // Java 21 major version
+        println "Scanning runtimeClasspath jars for classfile versions (threshold ${threshold})..."
+        project.configurations.runtimeClasspath.resolve().each { File f ->
+            if (f.name.endsWith('.jar')) {
+                def maxVersion = 0
+                java.util.zip.ZipFile zip = new java.util.zip.ZipFile(f)
+                try {
+                    zip.entries().each { entry ->
+                        if (!entry.isDirectory() && entry.name.endsWith('.class')) {
+                            def inStream = zip.getInputStream(entry)
+                            try {
+                                byte[] header = new byte[8]
+                                int read = inStream.read(header)
+                                if (read == 8) {
+                                    int major = ((header[6] & 0xFF) << 8) | (header[7] & 0xFF)
+                                    if (major > maxVersion) maxVersion = major
+                                }
+                            } finally {
+                                inStream.close()
+                            }
+                        }
+                    }
+                } finally {
+                    zip.close()
+                }
+                if (maxVersion > 0) {
+                    if (maxVersion > threshold) {
+                        println "[WARN] ${f.name}: highest class major version = ${maxVersion} (> ${threshold})"
+                    } else {
+                        println "${f.name}: highest class major version = ${maxVersion}"
+                    }
+                }
+            }
+        }
+    }
 }
