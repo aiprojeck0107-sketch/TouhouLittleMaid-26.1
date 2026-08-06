@@ -1,10 +1,10 @@
-// Minimal fabric-loom based build.gradle template
+// Fabric-loom based build.gradle (improved)
 plugins {
     id 'java-library'
     id 'eclipse'
     id 'idea'
 
-    // Fabric loom plugin (starter template). Version may need update to a recent stable one.
+    // Fabric loom plugin
     id 'fabric-loom' version '1.5.6'
 
     id 'com.gradleup.shadow' version '9.4.1'
@@ -30,23 +30,35 @@ repositories {
     maven { url = 'https://jitpack.io' }
 }
 
+// Loom configuration
 loom {
-    // loom settings can be tuned later
+    // Use properties from gradle.properties where possible
+    // mappings and loader versions may need adjustments based on Minecraft version
 }
 
 dependencies {
-    // Fabric loader and fabric api
+    // Minecraft and mappings
     minecraft "com.mojang:minecraft:${minecraft_version}"
-    mappings "net.fabricmc:yarn:1.0+build"
-    modImplementation "net.fabricmc:fabric-loader:0.14.0"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:0.88.0+1.26.0"
+    // yarn mappings placeholder — the exact mapping version may need update to a valid yarn build
+    mappings "net.fabricmc:yarn:1.0+build.1"
+
+    // Fabric loader and api — versions are placeholders and may need updating
+    modImplementation "net.fabricmc:fabric-loader:0.14.19"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:1.76.0+1.26.1"
 
     // Keep libraries previously shaded
     implementation 'com.squareup:javapoet:1.13.0'
 
-    // example compat dependencies — WILL need replacement with Fabric equivalents
-    // JEI / Cloth Config / Jade / Curios / GeckoLib / Sodium/Iris / Aquaculture
-    // TODO: replace neoforge artifacts with Fabric variants
+    // Libraries from original project to be kept/relocated as needed
+    mcLib "org.gagravarr:vorbis-java-core:0.8"
+    mcLib "io.github.jaredmdobson:concentus:1.0.2"
+    mcLib "com.googlecode.soundlibs:mp3spi:1.9.5.4"
+    mcLib "org.yaml:snakeyaml:2.4"
+
+    testImplementation 'junit:junit:4.13.2'
+
+    // NOTE: Third-party mod deps (JEI, Cloth, Jade, Curios, GeckoLib, Sodium/Iris, Aquaculture)
+    // need to be replaced with Fabric-compatible artifacts. These are TODOs.
 }
 
 tasks.compileJava {
@@ -54,7 +66,6 @@ tasks.compileJava {
 }
 
 shadowJar {
-    // keep relocations from original build (may need update)
     dependencies {
         exclude(dependency('junit:junit'))
     }
