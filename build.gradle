@@ -57,7 +57,7 @@ dependencies {
 
     testImplementation 'junit:junit:4.13.2'
 
-    // NOTE: Third-party mod deps (JEI, Cloth, Jade, Curios, GeckoLib, Sodium/Iris, Aquaculture)
+    // NOTE: Third-party mod deps (JEI, Cloth-config, Jade, Curios, GeckoLib, Sodium/Iris, Aquaculture)
     // need to be replaced with Fabric-compatible artifacts. These are TODOs.
 }
 
