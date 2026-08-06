@@ -4,89 +4,115 @@ import com.github.tartaricacid.touhoulittlemaid.TouhouLittleMaid;
 import com.github.tartaricacid.touhoulittlemaid.block.*;
 import com.github.tartaricacid.touhoulittlemaid.blockentity.*;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.neoforged.neoforge.registries.DeferredBlock;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 
-import java.util.function.Supplier;
+import net.minecraft.core.Registry;
 
 public final class InitBlocks {
-    public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(TouhouLittleMaid.MOD_ID);
-    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, TouhouLittleMaid.MOD_ID);
+    // Blocks
+    public static Block PINK_MAID_BED;
+    public static Block WHITE_MAID_BED;
+    public static Block BLACK_MAID_BED;
+    public static Block YELLOW_MAID_BED;
+    public static Block BLUE_MAID_BED;
+    public static Block GREEN_MAID_BED;
+    public static Block PURPLE_MAID_BED;
 
-    public static DeferredBlock<Block> PINK_MAID_BED = BLOCKS.register("pink_maid_bed", id -> new BlockMaidBed(id, DyeColor.PINK));
-    public static DeferredBlock<Block> WHITE_MAID_BED = BLOCKS.register("white_maid_bed", id -> new BlockMaidBed(id, DyeColor.WHITE));
-    public static DeferredBlock<Block> BLACK_MAID_BED = BLOCKS.register("black_maid_bed", id -> new BlockMaidBed(id, DyeColor.BLACK));
-    public static DeferredBlock<Block> YELLOW_MAID_BED = BLOCKS.register("yellow_maid_bed", id -> new BlockMaidBed(id, DyeColor.YELLOW));
-    public static DeferredBlock<Block> BLUE_MAID_BED = BLOCKS.register("blue_maid_bed", id -> new BlockMaidBed(id, DyeColor.BLUE));
-    public static DeferredBlock<Block> GREEN_MAID_BED = BLOCKS.register("green_maid_bed", id -> new BlockMaidBed(id, DyeColor.GREEN));
-    public static DeferredBlock<Block> PURPLE_MAID_BED = BLOCKS.register("purple_maid_bed", id -> new BlockMaidBed(id, DyeColor.PURPLE));
+    public static Block ALTAR;
+    public static Block STATUE;
+    public static Block GARAGE_KIT;
+    public static Block MAID_BEACON;
+    public static Block MODEL_SWITCHER;
+    public static Block PICNIC_MAT;
+    public static Block GOMOKU;
+    public static Block CCHESS;
+    public static Block WCHESS;
+    public static Block KEYBOARD;
+    public static Block BOOKSHELF;
+    public static Block COMPUTER;
+    public static Block SHRINE;
+    public static Block SCARECROW;
+    public static Block SNACK_CABINET;
 
-    public static DeferredBlock<Block> ALTAR = BLOCKS.register("altar", BlockAltar::new);
-    public static DeferredBlock<Block> STATUE = BLOCKS.register("statue", BlockStatue::new);
-    public static DeferredBlock<Block> GARAGE_KIT = BLOCKS.register("garage_kit", BlockGarageKit::new);
-    public static DeferredBlock<Block> MAID_BEACON = BLOCKS.register("maid_beacon", BlockMaidBeacon::new);
-    public static DeferredBlock<Block> MODEL_SWITCHER = BLOCKS.register("model_switcher", BlockModelSwitcher::new);
-    public static DeferredBlock<Block> PICNIC_MAT = BLOCKS.register("picnic_mat", BlockPicnicMat::new);
-    public static DeferredBlock<Block> GOMOKU = BLOCKS.register("gomoku", BlockGomoku::new);
-    public static DeferredBlock<Block> CCHESS = BLOCKS.register("cchess", BlockCChess::new);
-    public static DeferredBlock<Block> WCHESS = BLOCKS.register("wchess", BlockWChess::new);
-    public static DeferredBlock<Block> KEYBOARD = BLOCKS.register("keyboard", BlockKeyboard::new);
-    public static DeferredBlock<Block> BOOKSHELF = BLOCKS.register("bookshelf", BlockBookshelf::new);
-    public static DeferredBlock<Block> COMPUTER = BLOCKS.register("computer", BlockComputer::new);
-    public static DeferredBlock<Block> SHRINE = BLOCKS.register("shrine", BlockShrine::new);
-    public static DeferredBlock<Block> SCARECROW = BLOCKS.register("scarecrow", BlockScarecrow::new);
-    public static DeferredBlock<Block> SNACK_CABINET = BLOCKS.register("snack_cabinet", BlockSnackCabinet::new);
+    // Block entity types
+    public static BlockEntityType<BlockEntityAltar> ALTAR_BE;
+    public static BlockEntityType<BlockEntityStatue> STATUE_BE;
+    public static BlockEntityType<BlockEntityGarageKit> GARAGE_KIT_BE;
+    public static BlockEntityType<BlockEntityMaidBeacon> MAID_BEACON_BE;
+    public static BlockEntityType<BlockEntityModelSwitcher> MODEL_SWITCHER_BE;
+    public static BlockEntityType<BlockEntityGomoku> GOMOKU_BE;
+    public static BlockEntityType<BlockEntityCChess> CCHESS_BE;
+    public static BlockEntityType<BlockEntityWChess> WCHESS_BE;
+    public static BlockEntityType<BlockEntityKeyboard> KEYBOARD_BE;
+    public static BlockEntityType<BlockEntityBookshelf> BOOKSHELF_BE;
+    public static BlockEntityType<BlockEntityComputer> COMPUTER_BE;
+    public static BlockEntityType<BlockEntityShrine> SHRINE_BE;
+    public static BlockEntityType<BlockEntityPicnicMat> PICNIC_MAT_BE;
+    public static BlockEntityType<BlockEntitySnackCabinet> SNACK_CABINET_BE;
+    public static BlockEntityType<BlockEntityMaidBed> MAID_BED_BE;
 
-    public static Supplier<BlockEntityType<BlockEntityAltar>> ALTAR_BE = BLOCK_ENTITY_TYPES.register("altar",
-            () -> new BlockEntityType<>(BlockEntityAltar::new, ALTAR.get()));
+    public static void registerAll() {
+        // Register blocks
+        PINK_MAID_BED = registerBlock("pink_maid_bed", new BlockMaidBed(new Identifier(TouhouLittleMaid.MOD_ID, "pink_maid_bed"), DyeColor.PINK));
+        WHITE_MAID_BED = registerBlock("white_maid_bed", new BlockMaidBed(new Identifier(TouhouLittleMaid.MOD_ID, "white_maid_bed"), DyeColor.WHITE));
+        BLACK_MAID_BED = registerBlock("black_maid_bed", new BlockMaidBed(new Identifier(TouhouLittleMaid.MOD_ID, "black_maid_bed"), DyeColor.BLACK));
+        YELLOW_MAID_BED = registerBlock("yellow_maid_bed", new BlockMaidBed(new Identifier(TouhouLittleMaid.MOD_ID, "yellow_maid_bed"), DyeColor.YELLOW));
+        BLUE_MAID_BED = registerBlock("blue_maid_bed", new BlockMaidBed(new Identifier(TouhouLittleMaid.MOD_ID, "blue_maid_bed"), DyeColor.BLUE));
+        GREEN_MAID_BED = registerBlock("green_maid_bed", new BlockMaidBed(new Identifier(TouhouLittleMaid.MOD_ID, "green_maid_bed"), DyeColor.GREEN));
+        PURPLE_MAID_BED = registerBlock("purple_maid_bed", new BlockMaidBed(new Identifier(TouhouLittleMaid.MOD_ID, "purple_maid_bed"), DyeColor.PURPLE));
 
-    public static Supplier<BlockEntityType<BlockEntityStatue>> STATUE_BE = BLOCK_ENTITY_TYPES.register("statue",
-            () -> new BlockEntityType<>(BlockEntityStatue::new, STATUE.get()));
+        ALTAR = registerBlock("altar", new BlockAltar());
+        STATUE = registerBlock("statue", new BlockStatue());
+        GARAGE_KIT = registerBlock("garage_kit", new BlockGarageKit());
+        MAID_BEACON = registerBlock("maid_beacon", new BlockMaidBeacon());
+        MODEL_SWITCHER = registerBlock("model_switcher", new BlockModelSwitcher());
+        PICNIC_MAT = registerBlock("picnic_mat", new BlockPicnicMat());
+        GOMOKU = registerBlock("gomoku", new BlockGomoku());
+        CCHESS = registerBlock("cchess", new BlockCChess());
+        WCHESS = registerBlock("wchess", new BlockWChess());
+        KEYBOARD = registerBlock("keyboard", new BlockKeyboard());
+        BOOKSHELF = registerBlock("bookshelf", new BlockBookshelf());
+        COMPUTER = registerBlock("computer", new BlockComputer());
+        SHRINE = registerBlock("shrine", new BlockShrine());
+        SCARECROW = registerBlock("scarecrow", new BlockScarecrow());
+        SNACK_CABINET = registerBlock("snack_cabinet", new BlockSnackCabinet());
 
-    public static Supplier<BlockEntityType<BlockEntityGarageKit>> GARAGE_KIT_BE = BLOCK_ENTITY_TYPES.register("garage_kit", () ->
-            new BlockEntityType<>(BlockEntityGarageKit::new, GARAGE_KIT.get()));
+        // Register block entity types
+        ALTAR_BE = registerBlockEntityType("altar", BlockEntityType.Builder.of(BlockEntityAltar::new, ALTAR));
+        STATUE_BE = registerBlockEntityType("statue", BlockEntityType.Builder.of(BlockEntityStatue::new, STATUE));
+        GARAGE_KIT_BE = registerBlockEntityType("garage_kit", BlockEntityType.Builder.of(BlockEntityGarageKit::new, GARAGE_KIT));
+        MAID_BEACON_BE = registerBlockEntityType("maid_beacon", BlockEntityType.Builder.of(BlockEntityMaidBeacon::new, MAID_BEACON));
+        MODEL_SWITCHER_BE = registerBlockEntityType("model_switcher", BlockEntityType.Builder.of(BlockEntityModelSwitcher::new, MODEL_SWITCHER));
+        GOMOKU_BE = registerBlockEntityType("gomoku", BlockEntityType.Builder.of(BlockEntityGomoku::new, GOMOKU));
+        CCHESS_BE = registerBlockEntityType("cchess", BlockEntityType.Builder.of(BlockEntityCChess::new, CCHESS));
+        WCHESS_BE = registerBlockEntityType("wchess", BlockEntityType.Builder.of(BlockEntityWChess::new, WCHESS));
+        KEYBOARD_BE = registerBlockEntityType("keyboard", BlockEntityType.Builder.of(BlockEntityKeyboard::new, KEYBOARD));
+        BOOKSHELF_BE = registerBlockEntityType("bookshelf", BlockEntityType.Builder.of(BlockEntityBookshelf::new, BOOKSHELF));
+        COMPUTER_BE = registerBlockEntityType("computer", BlockEntityType.Builder.of(BlockEntityComputer::new, COMPUTER));
+        SHRINE_BE = registerBlockEntityType("shrine", BlockEntityType.Builder.of(BlockEntityShrine::new, SHRINE));
+        PICNIC_MAT_BE = registerBlockEntityType("picnic_mat", BlockEntityType.Builder.of(BlockEntityPicnicMat::new, PICNIC_MAT));
+        SNACK_CABINET_BE = registerBlockEntityType("snack_cabinet", BlockEntityType.Builder.of(BlockEntitySnackCabinet::new, SNACK_CABINET));
+        MAID_BED_BE = registerBlockEntityType("maid_bed", BlockEntityType.Builder.of(BlockEntityMaidBed::new,
+                PINK_MAID_BED, WHITE_MAID_BED, BLACK_MAID_BED,
+                YELLOW_MAID_BED, BLUE_MAID_BED, GREEN_MAID_BED,
+                PURPLE_MAID_BED));
+    }
 
-    public static Supplier<BlockEntityType<BlockEntityMaidBeacon>> MAID_BEACON_BE = BLOCK_ENTITY_TYPES.register("maid_beacon",
-            () -> new BlockEntityType<>(BlockEntityMaidBeacon::new, MAID_BEACON.get()));
+    private static Block registerBlock(String id, Block block) {
+        return Registry.register(Registries.BLOCK, new Identifier(TouhouLittleMaid.MOD_ID, id), block);
+    }
 
-    public static Supplier<BlockEntityType<BlockEntityModelSwitcher>> MODEL_SWITCHER_BE = BLOCK_ENTITY_TYPES.register("model_switcher",
-            () -> new BlockEntityType<>(BlockEntityModelSwitcher::new, MODEL_SWITCHER.get()));
-
-    public static Supplier<BlockEntityType<BlockEntityGomoku>> GOMOKU_BE = BLOCK_ENTITY_TYPES.register("gomoku",
-            () -> new BlockEntityType<>(BlockEntityGomoku::new, GOMOKU.get()));
-
-    public static Supplier<BlockEntityType<BlockEntityCChess>> CCHESS_BE = BLOCK_ENTITY_TYPES.register("cchess",
-            () -> new BlockEntityType<>(BlockEntityCChess::new, CCHESS.get()));
-
-    public static Supplier<BlockEntityType<BlockEntityWChess>> WCHESS_BE = BLOCK_ENTITY_TYPES.register("wchess",
-            () -> new BlockEntityType<>(BlockEntityWChess::new, WCHESS.get()));
-
-    public static Supplier<BlockEntityType<BlockEntityKeyboard>> KEYBOARD_BE = BLOCK_ENTITY_TYPES.register("keyboard",
-            () -> new BlockEntityType<>(BlockEntityKeyboard::new, KEYBOARD.get()));
-
-    public static Supplier<BlockEntityType<BlockEntityBookshelf>> BOOKSHELF_BE = BLOCK_ENTITY_TYPES.register("bookshelf",
-            () -> new BlockEntityType<>(BlockEntityBookshelf::new, BOOKSHELF.get()));
-
-    public static Supplier<BlockEntityType<BlockEntityComputer>> COMPUTER_BE = BLOCK_ENTITY_TYPES.register("computer",
-            () -> new BlockEntityType<>(BlockEntityComputer::new, COMPUTER.get()));
-
-    public static Supplier<BlockEntityType<BlockEntityShrine>> SHRINE_BE = BLOCK_ENTITY_TYPES.register("shrine",
-            () -> new BlockEntityType<>(BlockEntityShrine::new, SHRINE.get()));
-
-    public static Supplier<BlockEntityType<BlockEntityPicnicMat>> PICNIC_MAT_BE = BLOCK_ENTITY_TYPES.register("picnic_mat",
-            () -> new BlockEntityType<>(BlockEntityPicnicMat::new, PICNIC_MAT.get()));
-
-    public static Supplier<BlockEntityType<BlockEntitySnackCabinet>> SNACK_CABINET_BE = BLOCK_ENTITY_TYPES.register("snack_cabinet",
-            () -> new BlockEntityType<>(BlockEntitySnackCabinet::new, SNACK_CABINET.get()));
-
-    public static Supplier<BlockEntityType<BlockEntityMaidBed>> MAID_BED_BE = BLOCK_ENTITY_TYPES.register("maid_bed",
-            () -> new BlockEntityType<>(BlockEntityMaidBed::new,
-                    PINK_MAID_BED.get(), WHITE_MAID_BED.get(), BLACK_MAID_BED.get(),
-                    YELLOW_MAID_BED.get(), BLUE_MAID_BED.get(), GREEN_MAID_BED.get(),
-                    PURPLE_MAID_BED.get()
-            )
-    );
+    private static <T extends BlockEntity> BlockEntityType<T> registerBlockEntityType(String id, BlockEntityType.Builder<T> builder) {
+        BlockEntityType<T> type = builder.build(null);
+        return Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(TouhouLittleMaid.MOD_ID, id), type);
+    }
 }
