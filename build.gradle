@@ -5,7 +5,7 @@ plugins {
     id 'idea'
 
     // Fabric loom plugin
-    id 'fabric-loom' version '1.5.6'
+    id 'fabric-loom' version '1.7-SNAPSHOT'
 
     // Use the widely-used Shadow plugin maintained by John Rengelman (better Gradle compatibility)
     id 'com.github.johnrengelman.shadow' version '8.1.1'
