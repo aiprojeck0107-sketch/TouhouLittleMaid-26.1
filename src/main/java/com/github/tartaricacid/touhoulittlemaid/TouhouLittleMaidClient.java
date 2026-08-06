@@ -12,6 +12,5 @@ public class TouhouLittleMaidClient implements ClientModInitializer {
         LOGGER.info("Initializing TouhouLittleMaidClient on Fabric");
 
         // TODO: move client-only registration here (renderers, keybindings, client data, config menu integration)
-        // Original code used NeoForge ModContainer and cloth config detection. On Fabric we should use ModMenu/Cloth-Config-Fabric integration
     }
 }
