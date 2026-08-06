@@ -8,48 +8,56 @@ import com.github.tartaricacid.touhoulittlemaid.entity.passive.EntityMaid;
 import com.github.tartaricacid.touhoulittlemaid.entity.projectile.EntityDanmaku;
 import com.github.tartaricacid.touhoulittlemaid.entity.projectile.EntityThrowPowerPoint;
 import com.github.tartaricacid.touhoulittlemaid.entity.projectile.MaidFishingHook;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.syncher.EntityDataSerializer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.SpawnPlacementTypes;
+import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
-import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
-import java.util.function.Supplier;
+public final class InitEntities {
+    public static EntityType<EntityMaid> MAID;
+    public static EntityType<EntityFairy> FAIRY;
+    public static EntityType<EntityChair> CHAIR;
+    public static EntityType<EntityBroom> BROOM;
+    public static EntityType<EntityBox> BOX;
+    public static EntityType<EntitySit> SIT;
+    public static EntityType<EntityTombstone> TOMBSTONE;
+    public static EntityType<MaidFishingHook> FISHING_HOOK;
+    public static EntityType<EntityDanmaku> DANMAKU;
+    public static EntityType<EntityExtinguishingAgent> EXTINGUISHING_AGENT;
+    public static EntityType<EntityPowerPoint> POWER_POINT;
+    public static EntityType<EntityThrowPowerPoint> THROW_POWER_POINT;
 
+    public static EntityDataSerializer<?> MAID_CHAT_BUBBLE_DATA_SERIALIZERS;
 
-@EventBusSubscriber(modid = TouhouLittleMaid.MOD_ID)
-public interface InitEntities {
-    DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(Registries.ENTITY_TYPE, TouhouLittleMaid.MOD_ID);
-    DeferredRegister<EntityDataSerializer<?>> DATA_SERIALIZERS = DeferredRegister.create(NeoForgeRegistries.ENTITY_DATA_SERIALIZERS, TouhouLittleMaid.MOD_ID);
+    public static void registerAll() {
+        MAID = register("maid", EntityMaid.TYPE);
+        FAIRY = register("fairy", EntityFairy.TYPE);
+        CHAIR = register("chair", EntityChair.TYPE);
+        BROOM = register("broom", EntityBroom.TYPE);
+        BOX = register("box", EntityBox.TYPE);
+        SIT = register("sit", EntitySit.TYPE);
+        TOMBSTONE = register("tombstone", EntityTombstone.TYPE);
+        FISHING_HOOK = register("fishing_hook", MaidFishingHook.TYPE);
+        DANMAKU = register("danmaku", EntityDanmaku.TYPE);
+        EXTINGUISHING_AGENT = register("extinguishing_agent", EntityExtinguishingAgent.TYPE);
+        POWER_POINT = register("power_point", EntityPowerPoint.TYPE);
+        THROW_POWER_POINT = register("throw_power_point", EntityThrowPowerPoint.TYPE);
 
-    Supplier<EntityType<EntityMaid>> MAID = ENTITY_TYPES.register("maid", () -> EntityMaid.TYPE);
-    Supplier<EntityType<EntityFairy>> FAIRY = ENTITY_TYPES.register("fairy", () -> EntityFairy.TYPE);
-    Supplier<EntityType<EntityChair>> CHAIR = ENTITY_TYPES.register("chair", () -> EntityChair.TYPE);
-    Supplier<EntityType<EntityBroom>> BROOM = ENTITY_TYPES.register("broom", () -> EntityBroom.TYPE);
-    Supplier<EntityType<EntityBox>> BOX = ENTITY_TYPES.register("box", () -> EntityBox.TYPE);
-    Supplier<EntityType<EntitySit>> SIT = ENTITY_TYPES.register("sit", () -> EntitySit.TYPE);
-    Supplier<EntityType<EntityTombstone>> TOMBSTONE = ENTITY_TYPES.register("tombstone", () -> EntityTombstone.TYPE);
-    Supplier<EntityType<MaidFishingHook>> FISHING_HOOK = ENTITY_TYPES.register("fishing_hook", () -> MaidFishingHook.TYPE);
-    Supplier<EntityType<EntityDanmaku>> DANMAKU = ENTITY_TYPES.register("danmaku", () -> EntityDanmaku.TYPE);
-    Supplier<EntityType<EntityExtinguishingAgent>> EXTINGUISHING_AGENT = ENTITY_TYPES.register("extinguishing_agent", () -> EntityExtinguishingAgent.TYPE);
-    Supplier<EntityType<EntityPowerPoint>> POWER_POINT = ENTITY_TYPES.register("power_point", () -> EntityPowerPoint.TYPE);
-    Supplier<EntityType<EntityThrowPowerPoint>> THROW_POWER_POINT = ENTITY_TYPES.register("throw_power_point", () -> EntityThrowPowerPoint.TYPE);
+        MAID_CHAT_BUBBLE_DATA_SERIALIZERS = Registry.register(Registries.ENTITY_DATA_SERIALIZERS, new ResourceLocation(TouhouLittleMaid.MOD_ID, "maid_chat_bubble"), ChatBubbleRegister.INSTANCE);
 
-    Supplier<EntityDataSerializer<?>> MAID_CHAT_BUBBLE_DATA_SERIALIZERS = DATA_SERIALIZERS.register("maid_chat_bubble", () -> ChatBubbleRegister.INSTANCE);
+        // Register spawn placements
+        try {
+            SpawnPlacements.register(FAIRY, SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, EntityFairy::checkFairySpawnRules);
+        } catch (Throwable ignored) {
+            // Some environments may require different spawn registration timing; keep safe.
+        }
+    }
 
-    @SubscribeEvent
-    static void addEntitySpawnPlacement(RegisterSpawnPlacementsEvent event) {
-        event.register(
-                InitEntities.FAIRY.get(),
-                SpawnPlacementTypes.ON_GROUND,
-                Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                EntityFairy::checkFairySpawnRules,
-                RegisterSpawnPlacementsEvent.Operation.REPLACE
-        );
+    private static <T extends Entity> EntityType<T> register(String id, EntityType<T> type) {
+        return Registry.register(Registries.ENTITY_TYPE, new ResourceLocation(TouhouLittleMaid.MOD_ID, id), type);
     }
 }
