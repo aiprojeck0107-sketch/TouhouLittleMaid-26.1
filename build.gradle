@@ -7,7 +7,9 @@ plugins {
     // Fabric loom plugin
     id 'fabric-loom' version '1.5.6'
 
-    id 'com.gradleup.shadow' version '9.4.1'
+    // Use the widely-used Shadow plugin maintained by John Rengelman (better Gradle compatibility)
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+
     id 'maven-publish'
     id "org.openrewrite.rewrite" version "7.35.0"
 }
@@ -31,7 +33,6 @@ repositories {
 }
 
 configurations {
-    // optional configuration if you want to separate libraries that will be shaded
     shaded
 }
 
@@ -56,22 +57,19 @@ dependencies {
 
 // Loom configuration (small defaults, can be extended)
 loom {
-    // If you use an access widener, point here (gradle will include it)
     accessWidenerPath = file("src/main/resources/${mod_id}.accesswidener")
-    // You can tune runs/data generation here later
 }
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
-    // Keep target compatibility in sync with toolchain if necessary
 }
 
-// ShadowJar config
-shadowJar {
+// ShadowJar config using John Rengelman plugin API
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
+tasks.register('shadowJar', ShadowJar) {
     archiveClassifier.set('')
-    dependencies {
-        exclude(dependency('junit:junit'))
-    }
+    configurations = [project.configurations.runtimeClasspath]
     relocate 'io.github.jaredmdobson.concentus', 'com.github.tartaricacid.touhoulittlemaid.libs.concentus'
     relocate 'org.gagravarr', 'com.github.tartaricacid.touhoulittlemaid.libs.gagravarr'
     relocate 'javazoom.jl', 'com.github.tartaricacid.touhoulittlemaid.libs.javazoom.jl'
@@ -82,16 +80,17 @@ shadowJar {
     minimize()
 }
 
+// Make assemble depend on shadowJar (but remapJar will be created by loom)
 tasks.named('assemble') {
-    dependsOn shadowJar
+    dependsOn tasks.named('shadowJar')
 }
 
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifact(shadowJar.archiveFile) {
+            artifact(tasks.named('shadowJar').flatMap { it.archiveFile }) {
                 classifier = null
-                builtBy shadowJar
+                builtBy tasks.named('shadowJar')
             }
         }
     }
