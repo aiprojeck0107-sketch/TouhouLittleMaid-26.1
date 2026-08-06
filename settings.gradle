@@ -1,15 +1,9 @@
 pluginManagement {
     repositories {
-        mavenLocal()
         gradlePluginPortal()
-        maven { url = 'https://maven.neoforged.net/releases' }
+        maven { url = 'https://maven.fabricmc.net/' }
+        mavenCentral()
     }
 }
 
-plugins {
-    id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
-}
-
-rootProject.name = 'touhoulittlemaid'
-include 'maid-manager-codegen'
-project(':maid-manager-codegen').projectDir = file('modules/maid-manager-codegen')
+rootProject.name = 'TouhouLittleMaid-26.1'
