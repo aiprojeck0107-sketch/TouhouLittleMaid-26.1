@@ -57,12 +57,15 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
 
-    // Keep libraries previously shaded (put into shaded or implementation)
+    // Keep libraries previously shaded. Temporarily mark certain runtime libs as compileOnly
+    // to avoid them being present during Loom's minecraft JAR merge step which currently fails
+    // due to an unsupported classfile major version present in one dependency. We'll reintroduce
+    // shading or proper inclusion after identifying/fixing the problematic artifact.
     implementation 'com.squareup:javapoet:1.13.0'
-    implementation 'org.gagravarr:vorbis-java-core:0.8'
-    implementation 'io.github.jaredmdobson:concentus:1.0.2'
-    implementation 'com.googlecode.soundlibs:mp3spi:1.9.5.4'
-    implementation 'org.yaml:snakeyaml:2.4'
+    compileOnly 'org.gagravarr:vorbis-java-core:0.8'
+    compileOnly 'io.github.jaredmdobson:concentus:1.0.2'
+    compileOnly 'com.googlecode.soundlibs:mp3spi:1.9.5.4'
+    compileOnly 'org.yaml:snakeyaml:2.4'
 
     testImplementation 'junit:junit:4.13.2'
 }
